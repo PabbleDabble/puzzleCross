@@ -1,0 +1,32 @@
+#puzzleContainer table {
+    border-spacing: 0px;
+    border: solid;
+    border-width: 1px;
+}
+#puzzleContainer td {
+    border: solid;
+    border-width: 1px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+}
+
+#puzzleContainer table tr:first-child{
+    height: 100px;
+    vertical-align:bottom;
+    text-align: center;
+}
+#puzzleContainer table td:first-child{
+    width: 100px;
+    text-align: right;
+    padding-right: 10px;   
+}
+td.pixel.YES {
+    background-color: black;
+}
+td.pixel.NO {
+    background-color: grey;
+}
+td.clueCell.COMPLETE {
+    background-color: lightblue;
+}

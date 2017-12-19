@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PictureCross</title>
+</head>
+
+<body>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="puzzle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <div id="puzzleStarter">
+        <label for="size">Puzzle Size:</label>
+        <input type="number" 
+            id="size" 
+            value=8
+            min=1
+            max=15
+            step=1
+            style="min-height:25px;"><br/>
+        <input type="button" id="createPuzzle" value="Create Puzzle"></input><br/>
+        <input type="button" id="solvePuzzle" value="Solve Puzzle"></input><br/>
+    </div>
+
+    <div id="userMessage" style="min-height:50px;">
+        <p></p>
+    </div>
+
+
+    <!-- Here you can put the clues in, and it will parse it out -->
+    <!-- All of these divs should have id from the TOP LEFT of the 20x20 puzzle-->
+    <div id="PUZZ_r8c6_tweaked" class="clueDiv" style='display:none;'>
+        <div id='colClues'>
+            5,
+            2-1,
+            1-1,
+            1-1-1,
+            1-6,
+            1-1,    
+            1-1,
+            8
+        </div>
+        <div id='rowClues'>
+            1-2-1,
+            2-2,
+            1-4-1,
+            1-1-1,
+            1-1-1,
+            1-1-1,
+            2-3,
+            4
+        </div>
+    </div>
+    <div id="PUZZ_r8c6" class="clueDiv" style='display:none;'>
+        <div id='colClues'>
+            5,
+            2-1,
+            1-1,
+            1-1-1,
+            1-6,
+            1-1,    
+            1-1,
+            6
+        </div>
+        <div id='rowClues'>
+            1-2-1,
+            2-2,
+            1-4-1,
+            1-1-1,
+            1-1-1,
+            1-1-1,
+            2-3,
+            2
+        </div>
+    </div>
+
+
+
+
+    <div id="puzzleContainer">
+    </div>
+
+</body>
+</html>

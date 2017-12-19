@@ -1,4 +1,8 @@
+// REPO
 // https://github.com/PabbleDabble/puzzleCross/blob/master/index.html
+// RUN HTML - Local
+// file:///C:/Users/pv0005/Documents/puzzleCross/index.html
+// RUN HTML - Live
 // https://rawgit.com/PabbleDabble/puzzleCross/master/index.html
 
 
@@ -10,12 +14,9 @@ var POSSIBLESIZE = [];
 var solutionDunno = 0;
 var solutionYes = 1;
 var solutionNo = 2;
-var test = [];
-var solution = [];
-var clues = {
-    r: [],
-    c: []
-};
+var xxSLN = [];
+var xxCLUE = []
+
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
 
@@ -38,10 +39,10 @@ $(document).ready(function(){
     makePuzzle();
     solvePuzzle();
 
-    test = orderedSolution();
 });
 function clickPixel(event){
     // console.log(event.target.id);
+    var pixelID = event.target.id;
     if ($(event.target).hasClass("YES")){
         $(event.target).removeClass("YES");
         $(event.target).addClass("NO");
@@ -52,12 +53,19 @@ function clickPixel(event){
     else {
         $(event.target).addClass("YES");
     }
+    console.log('--------------------');
+
+    var i = $(event.target).data().rowindex - 1;
+    var j = $(event.target).data().colindex - 1;
+
+
+    console.log('R:' + i + ' / C:' + j);
+    console.log(solutionArr[i * 8 + j].val);
+    
 }
 function displaySolution(solution){
-    if (!Array.isArray(solution)){
-        showMessage('Solution is not an array');
-    }
-    var pixels = solution.length;
+
+    var pixels = solution.cellData.length;
     var size = Math.sqrt(pixels);
 
     if (parseInt(size) !== size){
@@ -65,15 +73,15 @@ function displaySolution(solution){
     }
     clearSolution();
     for (var i = 0; i < size; i++){
-        if (clues['c'][i].isComplete){
+        if (solution.clueData['c'][i].isComplete){
             $('td#col' + i).addClass('COMPLETE');
         }
-        if (clues['r'][i].isComplete){
+        if (solution.clueData['r'][i].isComplete){
             $('td#row' + i).addClass('COMPLETE');
         }
 
         for (var j = 0; j < size; j++){
-            var xTemp = solution[i*size + j];
+            var xTemp = solution.cellData[i*size + j].val;
             if (xTemp == solutionYes){
                 $('#r' + i + 'c' + j + '.pixel').addClass('YES');
             } else if (xTemp == solutionNo){
@@ -126,16 +134,15 @@ function getClues(divID){
     return tempClues;
 }
 function makePuzzle(){
-    // Reset solution too
-
-    // This is the first thing you do and the only time you need to get the clues
-    clues = getClues(puzzleID);
+    // This is the first thing you do to make the puzzle
+    var solutionObject = initializeSolution('blank');
+    var clues = solutionObject.clueData;
+    
 
     $('#puzzleContainer').html('');
     // var size = parseInt($('#size').val());
 
     var size = clues['c'].length;
-    solution = Array.apply(null, Array(size * size)).map(Number.prototype.valueOf,solutionDunno);
 
     if (!POSSIBLESIZE.includes(size)) {
         showMessage('Bad Puzzle Size');
@@ -177,7 +184,12 @@ function makePuzzle(){
             }
             else {
                 if (i > 0 && j > 0){
-                    puzzleHTML += '<td id="r' + (i-1).toString() + 'c' + (j-1).toString() + '" class="pixel">';
+                    puzzleHTML += '<td id="r' + (i-1).toString() + 'c' + (j-1).toString() + '" ';
+                    puzzleHTML += ' data-rowIndex='+i;
+                    puzzleHTML += ' data-colIndex='+i;
+                    puzzleHTML += ' class="pixel">';
+                    
+                    
                 }
                 else {
                     puzzleHTML += '<td>';
@@ -193,15 +205,20 @@ function makePuzzle(){
     puzzleHTML += '</table>';
     $('#puzzleContainer').html(puzzleHTML);
     
+    // This must be done after the puzzle has been made
     $('td.pixel').on('click',function(event){
         clickPixel(event);
     });
+    xxSLN = solutionObject.cellData;
+    xxCLUE = solutionObject.clueData;
 }
 function solvePuzzle(){
+    // This is the first thing you do to solve the puzzle
+    var solutionObject = initializeSolution('blank');
+    var clues = solutionObject.clueData;
     var size = clues['c'].length;
-    
-    solution = Array.apply(null, Array(size * size)).map(Number.prototype.valueOf,solutionDunno);
-    clues = getClues(puzzleID);
+
+
 
     var solutionUpdated = false;
     var doCounter = 1;
@@ -213,10 +230,10 @@ function solvePuzzle(){
     // var test =[1,2,3,4,5]; test.unshift(9,8); // test then is [9.8.1.2.3.4.5] // pre-pend
 
 
-    initialFullLine('r');
-    initialFullLine('c');
-    singleValueMoreThanHalf('r');
-    singleValueMoreThanHalf('c');
+    initialFullLine('r', solutionObject);
+    initialFullLine('c', solutionObject);
+    singleValueMoreThanHalf('r', solutionObject);
+    singleValueMoreThanHalf('c', solutionObject);
     
     // XX - Start solve loop
     do {
@@ -224,19 +241,20 @@ function solvePuzzle(){
         console.log('Beginning solve loop: ' + doCounter);
         doCounter++;
         
+        return;
+
         if (doCounter < 10){
-            solutionUpdated = lineComplete('r');
-            solutionUpdated = lineComplete('c');
-            solutionUpdated = edgeOfPuzzleIsYes('r');
-            solutionUpdated = edgeOfPuzzleIsYes('c');
+            solutionUpdated = lineComplete('r', solutionObject);
+            solutionUpdated = lineComplete('c', solutionObject);
+            solutionUpdated = edgeOfPuzzleIsYes('r', solutionObject);
+            solutionUpdated = edgeOfPuzzleIsYes('c', solutionObject);
         
 
         }
         else 
             debugger;
-        displaySolution(solution);
+        displaySolution(solutionObject);
     } while (solutionUpdated);
-
 }
 
 /* -------------------- LOGICS -------------------- */
@@ -244,7 +262,7 @@ function functionTemplate(direction){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
 
-    var tempSplitSolution = solutionSplit(direction, solution);
+    var tempSplitSolution = solutionSplit(direction, solution.cellData);
     var tempClues = clues[direction];
     var size = tempClues.length;
     var solutionUpdated = false;
@@ -257,19 +275,17 @@ function functionTemplate(direction){
         }
     }    
     if (solutionUpdated) {
-        solution = solutionMerge(direction, tempSplitSolution);
+        solution.cellData = solutionMerge(direction, tempSplitSolution, solution.cellData);
         displaySolution(solution);
-        return true;
     }
-    return false;
-
+    return {wasUpdate: solutionUpdated, solution: solution};
 }
-function edgeOfPuzzleIsYes(direction){
+function edgeOfPuzzleIsYes(direction, solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
 
-    var tempSplitSolution = solutionSplit(direction, solution);
-    var tempClues = clues[direction];
+    var tempSplitSolution = solutionSplit(direction, solution.cellData);
+    var tempClues = solution.clueData[direction];
     var size = tempClues.length;
     var solutionUpdated = false;
     for (var i = 0; i < size; i++){
@@ -315,29 +331,27 @@ function edgeOfPuzzleIsYes(direction){
         }    
     }    
     if (solutionUpdated) {
-        solution = solutionMerge(direction, tempSplitSolution);
+        solution.cellData = solutionMerge(direction, tempSplitSolution, solution.cellData);
         displaySolution(solution);
-        return true;
     }
-    return false;
-
+    return {wasUpdate: solutionUpdated, solution: solution};
 }
-function lineComplete(direction){
+function lineComplete(direction, solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
 
-    var tempSplitSolution = solutionSplit(direction, solution);
-    var tempClues = clues[direction];
+    var tempSplitSolution = solutionSplit(direction, solution.cellData);
+    var tempClues = solution.clueData[direction];
     var size = tempClues.length;
     var solutionUpdated = false;
 
     for (var i = 0; i < size; i++){
         if (!tempClues[i].isComplete) {
             var clueSum = tempClues[i].sum;
-            var solutionYesCount = occurrence(tempSplitSolution[i], solutionYes);
+            var solutionYesCount = occurrence(tempSplitSolution[i], solutionYes, 'val');
             if (clueSum == solutionYesCount){
                 solutionUpdated = true;
-                clues[direction][i].isComplete = true;
+                solution.clueData[direction][i].isComplete = true;
                 tempSplitSolution[i].forEach(function(item, j) {
                     if (item == solutionDunno)
                         tempSplitSolution[i][j] = solutionNo;
@@ -347,18 +361,18 @@ function lineComplete(direction){
     }
 
     if (solutionUpdated) {
-        solution = solutionMerge(direction, tempSplitSolution);
+        solution.cellData = solutionMerge(direction, tempSplitSolution, solution.cellData);
         displaySolution(solution);
-        return true;
     }
-    return false;
+    return {wasUpdate: solutionUpdated, solution: solution};
 }
-function singleValueMoreThanHalf(direction){
+function singleValueMoreThanHalf(direction, solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
+    var clues = solution.clueData;
 
     // Line is single values more than half width
-    var tempSplitSolution = solutionSplit(direction, solution);
+    var tempSplitSolution = solutionSplit(direction, solution.cellData);
     var tempClues = clues[direction];
     var size = tempClues.length;
     var solutionUpdated = false;
@@ -377,19 +391,18 @@ function singleValueMoreThanHalf(direction){
         }
     }
     if (solutionUpdated) {
-        solution = solutionMerge(direction, tempSplitSolution);
+        solution.cellData = solutionMerge(direction, tempSplitSolution, solution.cellData);
         displaySolution(solution);
-        return true;
     }
-    return false;
+    return {wasUpdate: solutionUpdated, solution: solution};
 }
-function initialFullLine(direction){
+function initialFullLine(direction, solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
 
     // Line is entirely full from the Beginning
-    var tempSplitSolution = solutionSplit(direction, solution);
-    var tempClues = clues[direction];
+    var tempSplitSolution = solutionSplit(direction, solution.cellData);
+    var tempClues = solution.clueData[direction];
 
     var size = tempClues.length;
     var solutionUpdated = false;
@@ -402,7 +415,7 @@ function initialFullLine(direction){
             // }
             // If every value in the clue is accounted for, fill in the solution with the rest no values
             if (xSum + tempClues[i].vals.length - 1 == size){
-                clues[direction][i].isComplete = true;
+                solution.clueData[direction][i].isComplete = true;
                 solutionUpdated = true;
                 var thisLine = [];
                 for (var j = 0; j < tempClues[i].vals.length; j++){            
@@ -417,36 +430,35 @@ function initialFullLine(direction){
         }
     }
     if (solutionUpdated) {
-        solution = solutionMerge(direction, tempSplitSolution);
+        solution.cellData = solutionMerge(direction, tempSplitSolution, solution.cellData);
         displaySolution(solution);
-        return true;
     }
-    return false;
+    return {wasUpdate: solutionUpdated, solution: solution};
 }
 
 
 
 
-function puzzleComplete(){
-    var cols = solutionSplit('c',solution);
-    var rows = solutionSplit('r',solution);
+function puzzleComplete(solution){
+    var cols = solutionSplit('c', solution.cellData);
+    var rows = solutionSplit('r', solution.cellData);
     var size = cols.length;
     var rowDone = [];
     var colDone = [];
 
     for (var i = 0; i < size; i++){
-        if (occurrence(cols[i], solutionYes) == clues['c'][i].sum){
+        if (occurrence(cols[i], solutionYes, 'val') == solution.clueData['c'][i].sum){
             colDone.push(i);
         }
-        else if (occurrence(cols[i], solutionYes) > clues['c'][i].sum){
+        else if (occurrence(cols[i], solutionYes, 'val') > solution.clueData['c'][i].sum){
             console.log('Col ' + i + ' has been solved incorrectly!!');
         }
 
 
-        if (occurrence(rows[i], solutionYes) == clues['r'][i].sum){
+        if (occurrence(rows[i], solutionYes, 'val') == solution.clueData['r'][i].sum){
             rowDone.push(i);
         }
-        else if (occurrence(rows[i], solutionYes) > clues['r'][i].sum){
+        else if (occurrence(rows[i], solutionYes, 'val') > solution.clueData['r'][i].sum){
             console.log('Row ' + i + ' has been solved incorrectly!!');
         }
     }
@@ -484,31 +496,9 @@ function mergeLines(newA, oldA){
     return oldA;
 }
 
-function orderedSolution(size) {
-    if (!size) {
-        size = clues['c'].length;
-    }
-    
-    var test=[];
-    for (var i = 0; i < size*size; i++){
-        test.push(i);
-    }
-    return test;    
-}
-function randomSolution(size) {
-    if (!size) {
-        size = clues['c'].length;
-    }
-    solution = [];
-    for (var i = 0; i < size * size; i++) {
-        var xVal = parseInt(Math.random()* 3);
-        solution.push(xVal);
-    }
-    return solution;
-}
 function solutionSplit(direction, solution){
     if (!solution)
-        solution = orderedSolution();
+        solution = initializeSolution(getClues(),'ordered');
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
     var size = Math.sqrt(solution.length);
@@ -533,29 +523,24 @@ function solutionSplit(direction, solution){
         return colSolution;
     }
 }
-function solutionMerge(direction, lineSolution){
+function solutionMerge(direction, lineSolution, solutionCellData){
     if (!lineSolution)
-        lineSolution = solutionSplit(direction, orderedSolution());
+        lineSolution = solutionSplit(direction, initializeSolution(getClues(),'ordered'));
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
 
     var size = lineSolution.length;
-    solution = [];
 
-    if (direction == 'r') {
-        for (var i = 0; i < size; i++){
-            solution = solution.concat(lineSolution[i]);
-        }
-        return solution;
-    }
-    else if (direction == 'c') {
-        for (var i = 0; i < size; i++){
-            for (var j = 0; j < size; j++){
-                solution.push(lineSolution[j][i]);
+    for (var i = 0; i < size; i++){
+        for (var j = 0; j < size; j++){
+            if (direction == 'r')
+                solutionCellData[i * 8 + j].val = lineSolution[i][j];
+            else if (direction == 'c') {
+                solutionCellData[i * 8 + j].val = lineSolution[j][i];
             }
         }
-        return solution;
     }
+    return solutionCellData;
 }
 function showMessage(msg){
     if (Array.isArray(msg)){
@@ -563,12 +548,62 @@ function showMessage(msg){
     }
     $('#userMessage p').first().html(msg);
 }
-function occurrence(arr, compare) {
+function occurrence(arr, compare, key) {
     var counter = 0;
     arr.forEach(function(item){
         // console.log(item);
-        if (item == compare)
+        if (key){
+            if (item[key] == compare)
             counter++;        
+        }
+        else {
+            if (item[key] == compare)
+            counter++;        
+        }
     });
     return counter;
+}
+function initializeSolution(valueObject){
+    var solutionObject = {cellData: [], clueData: getClues()};
+    var size = solutionObject.clueData['c'].length;
+    if (!POSSIBLESIZE.includes(size)) {
+        debugger;
+        return;
+    }
+    if (!valueObject)
+        debugger;
+
+    var useRandom = false;
+    var useOrdered = false;
+    var useSingleValue = false;
+
+    if (typeof valueObject == 'string'){
+        if (valueObject == 'random')
+            useRandom = true;
+        else if (valueObject == 'ordered')
+            useOrdered = true;            
+        else if (valueObject == 'blank'){
+            useSingleValue = true;
+            valueObject = solutionDunno;
+        }
+        else 
+            debugger;
+    }
+    else if (typeof valueObject == 'number'){
+        useSingleValue = true;
+    }
+
+    for (var i = 0; i < size * size; i++){
+        var xVal = -1;
+        if (useRandom)
+            xVal = parseInt(Math.random() * (Math.max(solutionYes,solutionNo,solutionDunno)+1));
+        else if (useOrdered)
+            xVal = i;
+        else if (useSingleValue)
+            xVal = valueObject;
+            solutionObject.cellData.push({val: xVal});
+    }
+    xxSLN = solutionObject.cellData;
+    xxCLUE = solutionObject.clueData;
+    return solutionObject;
 }

@@ -1,3 +1,7 @@
+// https://github.com/PabbleDabble/puzzleCross/blob/master/index.html
+// https://rawgit.com/PabbleDabble/puzzleCross/master/index.html
+
+
 var puzzleID = 'PUZZ_r8c6';
 // var puzzleID = 'PUZZ_r8c6_tweaked';
 var breakString = '<br/>';

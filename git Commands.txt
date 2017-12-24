@@ -1,3 +1,14 @@
+
+git checkout -b newBranch
+
 git commit -am "message"
 
-something else?
+
+
+VSC Commands
+CTRL-K+0 - collapse everythings
+CTRL-K+1 - collapse top layer
+CTRL-SHIFT-\  - go to scope definition of cursor
+CTRL-SHIFT-[  - collapse current
+CTRL-SHIFT-]  - expand current
+

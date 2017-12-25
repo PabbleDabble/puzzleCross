@@ -39,15 +39,27 @@ function makePuzzle(){
     puzzleHTML += '<table>';
 
     for (var i = 0; i <= size; i++){
-        puzzleHTML += '<tr>';
 
+        if (i == 0){
+            // Blank starter
+            puzzleHTML += '<tr>';
+            puzzleHTML += '<td>';
+            puzzleHTML += '</td>';
+            for (var k = 0; k < size; k++){
+                puzzleHTML += '<td>'+parseInt(k)+'</td>';
+            }
+            puzzleHTML += '</tr>';
+        }
+
+        puzzleHTML += '<tr>';
         for (var j = 0; j <= size; j++){
+
             // Put in the clues
             if (j > 0 && i == 0){
                 puzzleHTML += '<td id="col' + (j-1).toString() + '"';
                 puzzleHTML += ' class="clueCell colClue"';
                 puzzleHTML += ' data-direction="c" ';
-                puzzleHTML += ' data-colIndex=' + parseInt(j-1);
+                puzzleHTML += ' data-clue-index=' + parseInt(j-1);
                 puzzleHTML += '>';
                 // First row = column clues
                 puzzleHTML += clues['c'][j-1].vals.join(breakString);
@@ -56,7 +68,7 @@ function makePuzzle(){
                 puzzleHTML += '<td id="row' + (i-1).toString() + '"';
                 puzzleHTML += ' class="clueCell rowClue"';
                 puzzleHTML += ' data-direction="r" ';
-                puzzleHTML += ' data-rowIndex=' + parseInt(i-1);
+                puzzleHTML += ' data-clue-index=' + parseInt(i-1);
                 puzzleHTML += '>';
                 // First column = row clues
                 puzzleHTML += clues['r'][i-1].vals.join(' ');

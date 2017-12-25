@@ -2,20 +2,26 @@
 function functionTemplate(direction,solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
-
     var tempSplitSolution = solutionSplit(direction, solution);
-    var tempClues = clues[direction];
+    var tempClues = solution.clueData[direction];
     var size = tempClues.length;
     for (var i = 0; i < size; i++){
         if (!tempClues[i].isComplete) {
+            // -----------------------------------------------------
+            // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+            // -----------------------------------------------------
 
 
 
 
         }
-    }    
+    } 
+
+    // -----------------------------------------------------
+    // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+    // -----------------------------------------------------
+    solution.cellData = solutionMerge(direction, tempSplitSolution);
     if (solution.isUpdated) {
-        solution.cellData = solutionMerge(direction, tempSplitSolution);
         displaySolution(solution);
     }
     return solution;
@@ -30,15 +36,14 @@ function functionTemplate(direction,solution){
 function initialFullLine(direction, solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
-
     var tempSplitSolution = solutionSplit(direction, solution);
     var tempClues = solution.clueData[direction];
     var size = tempClues.length;
-    // ------------------------------------------------------------
-    // ------------------------------------------------------------
-    
     for (var i = 0; i < size; i++){
         if (!tempClues[i].isComplete) {
+            // -----------------------------------------------------
+            // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+            // -----------------------------------------------------    
 
             var xSum = tempClues[i].sum;
             // If every value in the clue is accounted for, fill in the solution with the rest no values
@@ -59,8 +64,9 @@ function initialFullLine(direction, solution){
         }
     }
 
-    // ------------------------------------------------------------
-    // ------------------------------------------------------------
+    // -----------------------------------------------------
+    // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+    // -----------------------------------------------------
     solution.cellData = solutionMerge(direction, tempSplitSolution);
     if (solution.isUpdated) {
         displaySolution(solution);
@@ -72,31 +78,33 @@ function initialFullLine(direction, solution){
 function singleValueMoreThanHalf(direction, solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
-
     var tempSplitSolution = solutionSplit(direction, solution);
     var tempClues = solution.clueData[direction];
     var size = tempClues.length;
-    // ------------------------------------------------------------
-    // ------------------------------------------------------------
-    
-    // Line is single values more than half width
     for (var i = 0; i < size; i++){
-        if (tempClues[i].vals.length == 1 && tempClues[i].vals[0] > (size/2)){
-            solution.isUpdated = true;
-            var middleChunk = tempClues[i].vals[0];
-            var endCapSize = size - middleChunk;
-            var middleSize = size - endCapSize * 2;
-            var endCaps = Array.apply(null, Array(endCapSize)).map(Number.prototype.valueOf,solutionDunno);
-            var middle = Array.apply(null, Array(middleSize)).map(Number.prototype.valueOf,solutionYes);
-            var newLine = endCaps.concat(middle.concat(endCaps));
+        if (!tempClues[i].isComplete) {
+            // -----------------------------------------------------
+            // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+            // -----------------------------------------------------
             
-            // tempSplitSolution[i] = mergeLines(newLine, tempSplitSolution[i]);
-            tempSplitSolution[i] = combineArrayAndStruct(newLine, tempSplitSolution[i], 'val');
+            if (tempClues[i].vals.length == 1 && tempClues[i].vals[0] > (size/2)){
+                solution.isUpdated = true;
+                var middleChunk = tempClues[i].vals[0];
+                var endCapSize = size - middleChunk;
+                var middleSize = size - endCapSize * 2;
+                var endCaps = Array.apply(null, Array(endCapSize)).map(Number.prototype.valueOf,solutionDunno);
+                var middle = Array.apply(null, Array(middleSize)).map(Number.prototype.valueOf,solutionYes);
+                var newLine = endCaps.concat(middle.concat(endCaps));
+                
+                // tempSplitSolution[i] = mergeLines(newLine, tempSplitSolution[i]);
+                tempSplitSolution[i] = combineArrayAndStruct(newLine, tempSplitSolution[i], 'val');
+            }
         }
     }
 
-    // ------------------------------------------------------------
-    // ------------------------------------------------------------
+    // -----------------------------------------------------
+    // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+    // -----------------------------------------------------
     solution.cellData = solutionMerge(direction, tempSplitSolution);
     if (solution.isUpdated) {
         displaySolution(solution);
@@ -108,32 +116,36 @@ function singleValueMoreThanHalf(direction, solution){
 function lineComplete(direction, solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
-
     var tempSplitSolution = solutionSplit(direction, solution);
     var tempClues = solution.clueData[direction];
     var size = tempClues.length;
-    var solutionUpdated = false;
-
     for (var i = 0; i < size; i++){
         if (!tempClues[i].isComplete) {
+            // -----------------------------------------------------
+            // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+            // -----------------------------------------------------
             var clueSum = tempClues[i].sum;
             var solutionYesCount = occurrence(tempSplitSolution[i], solutionYes, 'val');
             if (clueSum == solutionYesCount){
-                solutionUpdated = true;
+                solution.isUpdated = true;
                 solution.clueData[direction][i].isComplete = true;
+
                 tempSplitSolution[i].forEach(function(item, j) {
-                    if (item == solutionDunno)
-                        tempSplitSolution[i][j] = solutionNo;
+                    if (item.val == solutionDunno)
+                        tempSplitSolution[i][j].val = solutionNo;
                 });
             }
         }        
     }
 
-    if (solutionUpdated) {
-        solution.cellData = solutionMerge(direction, tempSplitSolution);
+    // -----------------------------------------------------
+    // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+    // -----------------------------------------------------
+    solution.cellData = solutionMerge(direction, tempSplitSolution);
+    if (solution.isUpdated) {
         displaySolution(solution);
     }
-    return {wasUpdate: solutionUpdated, solution: solution};
+    return solution;
 }
 //LOGIC 4
 // If there is a yes on an edge of a line (top, bot, left, right), 
@@ -141,37 +153,44 @@ function lineComplete(direction, solution){
 function edgeOfPuzzleIsYes(direction, solution){
     if (!direction || (direction != 'r' && direction != 'c'))
         debugger;
-
     var tempSplitSolution = solutionSplit(direction, solution);
     var tempClues = solution.clueData[direction];
     var size = tempClues.length;
-    var solutionUpdated = false;
     for (var i = 0; i < size; i++){
         if (!tempClues[i].isComplete) {
+            // -----------------------------------------------------
+            // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+            // -----------------------------------------------------
+
             var clueVals = tempClues[i].vals;
             // First edge
             var clueIndex = 0;
-            if(tempSplitSolution[i][0] == solutionYes){
-                solutionUpdated = true;
+            if(tempSplitSolution[i][0].val == solutionYes){
+                solution.isUpdated = true;
                 
                 var yesChunkSize = clueVals[clueIndex];
                 var yesChunk = Array.apply(null, Array(yesChunkSize)).map(Number.prototype.valueOf,solutionYes);
 
+                // Start with the yes chunk
                 var newLine = yesChunk;
+                // Add a no
                 newLine.push(solutionNo);
 
+                // Finish it with dunnos
                 var dunnoChunkSize = size - newLine.length;
                 var dunnoChunk = Array.apply(null, Array(dunnoChunkSize)).map(Number.prototype.valueOf,solutionDunno);
+
+                // New + Dunno
                 newLine = newLine.concat(dunnoChunk);
 
-                debugger;
-                tempSplitSolution[i] = mergeLines(newLine, tempSplitSolution[i]);
+                tempSplitSolution[i] = combineArrayAndStruct(newLine, tempSplitSolution[i], 'val');
             } 
             // Ending edge
             var clueIndex = clueVals.length - 1;
-            if(tempSplitSolution[i][size - 1] == solutionYes) {
-                solutionUpdated = true;
+            if(tempSplitSolution[i][size - 1].val == solutionYes) {
+                solution.isUpdated = true;
 
+                // Begin the yes chunk
                 var yesChunkSize = clueVals[clueIndex];
                 var yesChunk = Array.apply(null, Array(yesChunkSize)).map(Number.prototype.valueOf,solutionYes);
 
@@ -180,19 +199,23 @@ function edgeOfPuzzleIsYes(direction, solution){
                 // Add the yes's to the end of it
                 newLine = newLine.concat(yesChunk);
 
+                // The dunnos will be the full size minus what we just made
                 var dunnoChunkSize = size - newLine.length;
                 var dunnoChunk = Array.apply(null, Array(dunnoChunkSize)).map(Number.prototype.valueOf,solutionDunno);
                 // Put dunnos in front of it
                 newLine = dunnoChunk.concat(newLine);
 
-                debugger;
-                tempSplitSolution[i] = mergeLines(newLine, tempSplitSolution[i]);
+                tempSplitSolution[i] = combineArrayAndStruct(newLine, tempSplitSolution[i], 'val');
             }
         }    
-    }    
-    if (solutionUpdated) {
-        solution.cellData = solutionMerge(direction, tempSplitSolution);
+    }
+
+    // -----------------------------------------------------
+    // TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE TEMPLATE 
+    // -----------------------------------------------------
+    solution.cellData = solutionMerge(direction, tempSplitSolution);
+    if (solution.isUpdated) {
         displaySolution(solution);
     }
-    return {wasUpdate: solutionUpdated, solution: solution};
+    return solution;
 }

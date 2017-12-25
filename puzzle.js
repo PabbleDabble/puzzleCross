@@ -7,7 +7,7 @@
 
  
  var puzzleID = 'PUZZ_r8c6';
-// var puzzleID = 'PUZZ_r8c6_tweaked';
+ // var puzzleID = 'PUZZ_r8c6_tweaked';
 var breakString = '<br/>';
 var MAXSIZE = 15;
 var POSSIBLESIZE = [];
@@ -66,22 +66,17 @@ function solvePuzzle(){
         solutionObject.isUpdated = false;
         console.log('Beginning solve loop: ' + doCounter);
         doCounter++;
-        
-        return;
-        
         if (doCounter < 10){
-            solutionUpdated = lineComplete('r', solutionObject);
-            solutionUpdated = lineComplete('c', solutionObject);
-            return; // XX - working spot
-            solutionUpdated = edgeOfPuzzleIsYes('r', solutionObject);
-            solutionUpdated = edgeOfPuzzleIsYes('c', solutionObject);
-        
-
+            solutionObject = lineComplete('r', solutionObject);
+            solutionObject = lineComplete('c', solutionObject);
+            solutionObject = edgeOfPuzzleIsYes('r', solutionObject);
+            solutionObject = edgeOfPuzzleIsYes('c', solutionObject);
         }
-        else 
+        else {
             debugger;
+        }
         displaySolution(solutionObject);
-    } while (solutionUpdated);
+    } while (solutionObject.isUpdated);
 }
 
 

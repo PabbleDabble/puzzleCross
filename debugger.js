@@ -26,10 +26,11 @@ function clickClue(event){
     // console.log(event.target.id);
     var clueID = event.target.id;
     var direction = $(event.target).data().direction;
+    var index = $(event.target).data().clueIndex;
     console.log('--------------------');
     console.log(clueID);
     console.log(direction);
-    console.log('put in something about clue here');
+    console.log(zzClues[direction][index]);
 
 }
 function clickOrigin(event){

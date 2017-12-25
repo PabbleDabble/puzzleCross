@@ -44,15 +44,26 @@ function makePuzzle(){
             // Blank starter
             puzzleHTML += '<tr>';
             puzzleHTML += '<td>';
+            puzzleHTML += '';  // This is the invisible top left box
             puzzleHTML += '</td>';
             for (var k = 0; k < size; k++){
-                puzzleHTML += '<td>'+parseInt(k)+'</td>';
+                puzzleHTML += '<td class="visualIndex visualColIndex">';                
+                puzzleHTML += parseInt(k);
+                puzzleHTML += '</td>';
             }
             puzzleHTML += '</tr>';
         }
-
+        // This starts the row for the whole puzzle        
         puzzleHTML += '<tr>';
+
         for (var j = 0; j <= size; j++){
+
+            // This puts the visual index in its place
+            if (j == 0){
+                puzzleHTML += '<td>';
+                puzzleHTML += parseInt(i);
+                puzzleHTML += '</td>';
+            }
 
             // Put in the clues
             if (j > 0 && i == 0){

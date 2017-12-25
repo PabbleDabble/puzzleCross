@@ -11,12 +11,16 @@
     text-align: center;
 }
 
-#puzzleContainer table tr:first-child{
+/* This is the first row of colClues */
+/* #puzzleContainer table tr:first-child{ */
+#puzzleContainer table tr .colClue{
     height: 100px;
     vertical-align:bottom;
     text-align: center;
 }
-#puzzleContainer table td:first-child{
+/* This is the first column of rowClues */
+/* #puzzleContainer table td:first-child{ */
+#puzzleContainer table td.rowClue{
     width: 100px;
     text-align: right;
     padding-right: 10px;   

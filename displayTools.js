@@ -39,15 +39,18 @@ function makePuzzle(){
     puzzleHTML += '<table>';
 
     for (var i = 0; i <= size; i++){
-
+        
         if (i == 0){
-            // Blank starter
+            // Blank starter top row just for the visual index
             puzzleHTML += '<tr>';
             puzzleHTML += '<td>';
             puzzleHTML += '';  // This is the invisible top left box
             puzzleHTML += '</td>';
+            puzzleHTML += '<td>';
+            puzzleHTML += '';  // This is the cell above the origin box
+            puzzleHTML += '</td>';
             for (var k = 0; k < size; k++){
-                puzzleHTML += '<td class="visualIndex visualColIndex">';                
+                puzzleHTML += '<td class="visualIndex visualColIndex">';
                 puzzleHTML += parseInt(k);
                 puzzleHTML += '</td>';
             }
@@ -60,9 +63,18 @@ function makePuzzle(){
 
             // This puts the visual index in its place
             if (j == 0){
-                puzzleHTML += '<td>';
-                puzzleHTML += parseInt(i);
-                puzzleHTML += '</td>';
+                if (i == 0){
+                    puzzleHTML += '<td>';
+                    puzzleHTML += '';  // This is the cell to the left of the origin box
+                    puzzleHTML += '</td>';
+                }
+                else {
+                    puzzleHTML += '<td class="visualIndex visualRowIndex" ';
+                    puzzleHTML += 'data-visual-index=' + parseInt(i);
+                    puzzleHTML += '>';
+                    puzzleHTML += parseInt(i-1);
+                    puzzleHTML += '</td>';
+                }
             }
 
             // Put in the clues

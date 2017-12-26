@@ -1,7 +1,7 @@
 #puzzleContainer table {
     border-spacing: 0px;
-    border: solid;
-    border-width: 1px;
+    /* border: solid; */
+    /* border-width: 1px; */
 }
 #puzzleContainer td {
     border: solid;
@@ -10,6 +10,33 @@
     height: 25px;
     text-align: center;
 }
+/* Get right of the top and left borders on the table */
+#puzzleContainer table {
+    border-top: none !important;
+    border-left: none !important;
+}
+/* Get rid of the border on the first row */
+#puzzleContainer table tr:first-child td{
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+/* Get rid of borders on the first column */
+#puzzleContainer table td:first-child{
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+}   
+ 
+/* The most right column... */
+#puzzleContainer table tr td:last-child{
+    border-right-width: 2px !important;
+}
+/* The bottom row */
+#puzzleContainer table tr:last-child td{
+    border-bottom-width: 2px !important;
+}
+
 
 /* This is the first row of colClues */
 /* #puzzleContainer table tr:first-child{ */

@@ -86,6 +86,8 @@ function occurrence(arr, compare, key) {
             counter++;        
         }
         else {
+            debugger;
+            // You messed this up
             if (item[key] == compare)
             counter++;        
         }

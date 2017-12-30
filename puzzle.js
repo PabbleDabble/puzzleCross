@@ -1,7 +1,9 @@
 // REPO
 // https://github.com/PabbleDabble/puzzleCross/blob/master/index.html
-// RUN HTML - Local
+// RUN HTML - Local - work computer
 // file:///C:/Users/pv0005/Documents/puzzleCross/index.html
+// RUN HTML - Local - maggie laptop
+// file:///C:/Users/Owner/Desktop/ptvScripting/puzzleCross/index.html
 // RUN HTML - Live
 // https://rawgit.com/PabbleDabble/puzzleCross/master/index.html
 
